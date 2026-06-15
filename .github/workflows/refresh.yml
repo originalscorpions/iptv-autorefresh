@@ -2,11 +2,11 @@ name: Auto-Refresh YouTube M3U
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 */6 * * *'  # Every 6 hours (YouTube URLs die fast)
   workflow_dispatch:
 
 permissions:
-  contents: write  # ✅ This grants write permission
+  contents: write
 
 jobs:
   refresh:
@@ -17,69 +17,75 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Install yt-dlp
-        run: pip install yt-dlp
+        run: |
+          pip install yt-dlp --upgrade
+          yt-dlp --version
       
-      - name: Find and refresh YouTube URLs
+      - name: Refresh YouTube URLs
         run: |
           python3 << 'EOF'
           import re
           import subprocess
-          import sys
+          import json
           
-          try:
-              with open('stream.m3u', 'r') as f:
-                  content = f.read()
-          except FileNotFoundError:
-              print("stream.m3u not found!")
-              sys.exit(1)
+          # Read current M3U
+          with open('stream.m3u', 'r') as f:
+              lines = f.readlines()
           
-          # Find YouTube video IDs
-          pattern = r'id/([a-zA-Z0-9_-]+)\.'
-          video_ids = set(re.findall(pattern, content))
+          # Find all YouTube video IDs from your M3U
+          # Looking for patterns like id/XXXXXXXXX. in the URL
+          video_ids = {}
+          current_channel = None
+          
+          for i, line in enumerate(lines):
+              # Capture channel name from EXTINF line
+              if '#EXTINF:' in line and 'group-title' in line:
+                  # Extract channel name (last part after comma)
+                  match = re.search(r',([^,]+)$', line)
+                  if match:
+                      current_channel = match.group(1).strip()
+              
+              # Find YouTube URLs with video IDs
+              if 'googlevideo.com' in line and 'id/' in line:
+                  id_match = re.search(r'id/([a-zA-Z0-9_-]+)\.', line)
+                  if id_match and current_channel:
+                      video_id = id_match.group(1)
+                      video_ids[i] = {'id': video_id, 'channel': current_channel}
+                      print(f"Found: {current_channel} -> {video_id}")
           
           if not video_ids:
-              print("No YouTube video IDs found")
-              sys.exit(0)
+              print("No YouTube URLs found in M3U")
+              exit(0)
           
-          print(f"Found YouTube IDs: {video_ids}")
-          
-          # Refresh each URL
-          for vid in video_ids:
-              print(f"Refreshing: {vid}")
+          # Refresh each YouTube URL
+          for line_num, info in video_ids.items():
+              vid = info['id']
+              channel = info['channel']
+              print(f"\n🔄 Refreshing {channel} (ID: {vid})")
+              
               try:
-                  result = subprocess.run(
-                      ['yt-dlp', '-g', '-f', 'best', f'https://youtube.com/watch?v={vid}'],
-                      capture_output=True,
-                      text=True,
-                      timeout=30
-                  )
+                  # Get fresh streaming URL using yt-dlp
+                  cmd = ['yt-dlp', '-g', '-f', 'best', f'https://youtube.com/watch?v={vid}']
+                  result = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
                   
-                  if result.returncode == 0 and result.stdout:
+                  if result.returncode == 0 and result.stdout.strip():
                       new_url = result.stdout.strip().split('\n')[0]
-                      print(f"  Got new URL for {vid}")
+                      print(f"  ✅ Got fresh URL")
                       
-                      # Replace old URL with new URL
-                      lines = content.split('\n')
-                      new_lines = []
-                      
-                      for line in lines:
-                          if f'id/{vid}.' in line and ('http://' in line or 'https://' in line):
-                              # This is the URL line - replace it
-                              new_lines.append(new_url)
-                              print(f"  Replaced URL for {vid}")
-                          else:
-                              new_lines.append(line)
-                      
-                      content = '\n'.join(new_lines)
+                      # Replace the old URL line
+                      lines[line_num] = new_url + '\n'
+                      print(f"  ✅ Replaced URL for {channel}")
                   else:
-                      print(f"  Failed to refresh {vid}")
+                      print(f"  ❌ Failed: {result.stderr[:100]}")
+                      
               except Exception as e:
-                  print(f"  Error with {vid}: {e}")
-              
+                  print(f"  ❌ Error: {e}")
+          
+          # Save the refreshed M3U
           with open('stream.m3u', 'w') as f:
-              f.write(content)
-              
-          print("Done! M3U file refreshed.")
+              f.writelines(lines)
+          
+          print("\n✅ M3U refresh complete!")
           EOF
       
       - name: Commit and push changes
@@ -87,7 +93,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add stream.m3u
-          git diff --staged --quiet || git commit -m "Auto-refresh YouTube URLs [skip ci]"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ✅ This fixes the permission error
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-refresh YouTube URLs [skip ci]"
+            git push
+          fi
