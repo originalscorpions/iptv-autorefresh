@@ -1,0 +1,89 @@
+name: Auto-Refresh YouTube M3U
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'  # Runs every 12 hours
+  workflow_dispatch:  # Allows manual run
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install yt-dlp
+        run: pip install yt-dlp
+      
+      - name: Find and refresh YouTube URLs
+        run: |
+          python3 << 'EOF'
+          import re
+          import subprocess
+          import sys
+          
+          # Read the M3U file
+          with open('stream.m3u', 'r') as f:
+              content = f.read()
+          
+          # Find all YouTube video IDs from your URLs
+          # Pattern matches id/XXXXXXXXX. in the URL
+          pattern = r'id/([a-zA-Z0-9_-]+)\.'
+          video_ids = set(re.findall(pattern, content))
+          
+          if not video_ids:
+              print("No YouTube video IDs found")
+              sys.exit(0)
+          
+          print(f"Found YouTube IDs: {video_ids}")
+          
+          # Refresh each URL
+          for vid in video_ids:
+              print(f"Refreshing: {vid}")
+              try:
+                  # Get fresh streaming URL
+                  result = subprocess.run(
+                      ['yt-dlp', '-g', '-f', 'best', f'https://youtube.com/watch?v={vid}'],
+                      capture_output=True,
+                      text=True,
+                      timeout=30
+                  )
+                  
+                  if result.returncode == 0 and result.stdout:
+                      new_url = result.stdout.strip().split('\n')[0]
+                      print(f"  Got new URL")
+                      
+                      # Replace OLD URL pattern with NEW URL
+                      # Find lines containing this video ID and replace the whole URL
+                      lines = content.split('\n')
+                      new_lines = []
+                      
+                      for line in lines:
+                          if f'id/{vid}.' in line and line.startswith('http'):
+                              # Replace the URL line
+                              new_lines.append(new_url)
+                              print(f"  Updated URL for {vid}")
+                          else:
+                              new_lines.append(line)
+                      
+                      content = '\n'.join(new_lines)
+                  else:
+                      print(f"  Failed to refresh {vid}")
+              except Exception as e:
+                  print(f"  Error with {vid}: {e}")
+              
+          # Save the refreshed M3U
+          with open('stream.m3u', 'w') as f:
+              f.write(content)
+              
+          print("Done! M3U file refreshed.")
+          EOF
+      
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stream.m3u
+          git diff --staged --quiet || git commit -m "Auto-refresh YouTube URLs [skip ci]"
+          git push
