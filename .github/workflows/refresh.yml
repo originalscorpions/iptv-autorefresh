@@ -2,8 +2,11 @@ name: Auto-Refresh YouTube M3U
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
-  workflow_dispatch:  # Allows manual run
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write  # ✅ This grants write permission
 
 jobs:
   refresh:
@@ -23,12 +26,14 @@ jobs:
           import subprocess
           import sys
           
-          # Read the M3U file
-          with open('stream.m3u', 'r') as f:
-              content = f.read()
+          try:
+              with open('stream.m3u', 'r') as f:
+                  content = f.read()
+          except FileNotFoundError:
+              print("stream.m3u not found!")
+              sys.exit(1)
           
-          # Find all YouTube video IDs from your URLs
-          # Pattern matches id/XXXXXXXXX. in the URL
+          # Find YouTube video IDs
           pattern = r'id/([a-zA-Z0-9_-]+)\.'
           video_ids = set(re.findall(pattern, content))
           
@@ -42,7 +47,6 @@ jobs:
           for vid in video_ids:
               print(f"Refreshing: {vid}")
               try:
-                  # Get fresh streaming URL
                   result = subprocess.run(
                       ['yt-dlp', '-g', '-f', 'best', f'https://youtube.com/watch?v={vid}'],
                       capture_output=True,
@@ -52,18 +56,17 @@ jobs:
                   
                   if result.returncode == 0 and result.stdout:
                       new_url = result.stdout.strip().split('\n')[0]
-                      print(f"  Got new URL")
+                      print(f"  Got new URL for {vid}")
                       
-                      # Replace OLD URL pattern with NEW URL
-                      # Find lines containing this video ID and replace the whole URL
+                      # Replace old URL with new URL
                       lines = content.split('\n')
                       new_lines = []
                       
                       for line in lines:
-                          if f'id/{vid}.' in line and line.startswith('http'):
-                              # Replace the URL line
+                          if f'id/{vid}.' in line and ('http://' in line or 'https://' in line):
+                              # This is the URL line - replace it
                               new_lines.append(new_url)
-                              print(f"  Updated URL for {vid}")
+                              print(f"  Replaced URL for {vid}")
                           else:
                               new_lines.append(line)
                       
@@ -73,7 +76,6 @@ jobs:
               except Exception as e:
                   print(f"  Error with {vid}: {e}")
               
-          # Save the refreshed M3U
           with open('stream.m3u', 'w') as f:
               f.write(content)
               
@@ -87,3 +89,5 @@ jobs:
           git add stream.m3u
           git diff --staged --quiet || git commit -m "Auto-refresh YouTube URLs [skip ci]"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ✅ This fixes the permission error
