@@ -13,11 +13,13 @@ jobs:
       contents: write # Needed to push the updated playlist back to your repo
 
     steps:
+      # Upgraded to v6 for Node 24 native compatibility
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
+      # Upgraded to v6 for Node 24 native compatibility
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
@@ -31,8 +33,7 @@ jobs:
 
       - name: Fetch Live M3U8 URL and Update File
         run: |
-          # The specific YouTube Channel Live URL or Video ID for ARY News
-          # Note: If the channel changes its live stream ID, use the generic /live URL:
+          # The specific YouTube Channel Live URL for ARY News
           YOUTUBE_URL="https://www.youtube.com/c/ARYNEWSOFFICIAL/live"
           
           echo "Fetching new M3U8 link..."
@@ -46,16 +47,16 @@ jobs:
           
           echo "Successfully retrieved new link."
 
-          # Update the line directly below the ARY marker in playlist.m3u
-          # This replaces the old URL with the newly generated tokenized link
-          sed -i '/ARY/{n;s|.*|'"$NEW_M3U8_URL"'|}' playlist.m3u
+          # Target stream.m3u (based on your repo image)
+          # Replaces the line directly below the ARY channel marker
+          sed -i '/ARY/{n;s|.*|'"$NEW_M3U8_URL"'|}' stream.m3u
 
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git add playlist.m3u
+          git add stream.m3u
           
           # Only commit if the file actually changed to avoid redundant commits
           if git diff-index --quiet HEAD --; then
