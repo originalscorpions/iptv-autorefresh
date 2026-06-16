@@ -13,11 +13,9 @@ jobs:
       contents: write # Needed to push the updated playlist back to your repo
 
     steps:
-      # Upgraded to v6 for Node 24 native compatibility
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      # Upgraded to v6 for Node 24 native compatibility
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -33,8 +31,8 @@ jobs:
 
       - name: Fetch Live M3U8 URL and Update File
         run: |
-          # The specific YouTube Channel Live URL for ARY News
-          YOUTUBE_URL="https://www.youtube.com/c/ARYNEWSOFFICIAL/live"
+          # The permanent, hardcoded channel ID endpoint for ARY News
+          YOUTUBE_URL="https://www.youtube.com/channel/UCMmpLL2ucRHAXbNHiCPyIyg/live"
           
           echo "Fetching new M3U8 link..."
           # Fetch the best quality HLS/M3U8 URL using yt-dlp
@@ -47,8 +45,7 @@ jobs:
           
           echo "Successfully retrieved new link."
 
-          # Target stream.m3u (based on your repo image)
-          # Replaces the line directly below the ARY channel marker
+          # Target stream.m3u (replaces the link line directly below the ARY channel marker)
           sed -i '/ARY/{n;s|.*|'"$NEW_M3U8_URL"'|}' stream.m3u
 
       - name: Commit and Push Changes
