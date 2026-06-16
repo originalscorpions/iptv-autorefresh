@@ -1,4 +1,4 @@
 #EXTM3U
 
-#EXTINF:-1 group-title="HUNGARY",DUNA TV
-https://c401-node61-cdn.connectmedia.hu/110303/0aa8749ddfd647ab5a273a495c8416f3/6a31d4cc/index.m3u8?v=5iip:188.28.191.68
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/d/dd/Duna_TV_logo_2012.svg" group-title="HUNGARY",DUNA TV
+https://ythls.armelin.one/channel/UC_e39vEskO2pApxC9X_7Aag.m3u8
