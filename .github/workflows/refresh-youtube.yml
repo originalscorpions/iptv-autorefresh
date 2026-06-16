@@ -1,185 +1,66 @@
-name: Refresh YouTube Streams Every 6 Hours
+name: Refresh YouTube Live M3U8
 
 on:
   schedule:
-    - cron: '0 */6 * * *'      # Runs every 6 hours
-  workflow_dispatch:            # Allows manual run from GitHub UI
-
-permissions:
-  contents: write               # Required to push changes
+    # Runs every 6 hours (at minute 0 of hours 0, 6, 12, 18)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows you to manually trigger the workflow from the Actions tab
 
 jobs:
-  refresh-streams:
+  refresh-links:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    
+    permissions:
+      contents: write # Needed to push the updated playlist back to your repo
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
-      - name: Install yt-dlp
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies (yt-dlp)
         run: |
-          python -m pip install --upgrade pip
-          pip install yt-dlp
-          yt-dlp --version
-      
-      - name: Extract and Refresh YouTube URLs
+          sudo apt-get update
+          sudo apt-get install -y curl
+          # Download the latest yt-dlp binary
+          sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+          sudo chmod a+rx /usr/local/bin/yt-dlp
+
+      - name: Fetch Live M3U8 URL and Update File
         run: |
-          python3 << 'PYTHON_SCRIPT'
-          import re
-          import subprocess
-          import sys
-          from datetime import datetime
+          # The specific YouTube Channel Live URL or Video ID for ARY News
+          # Note: If the channel changes its live stream ID, use the generic /live URL:
+          YOUTUBE_URL="https://www.youtube.com/c/ARYNEWSOFFICIAL/live"
           
-          print(f"\n🚀 Starting refresh at {datetime.now()}")
-          print("=" * 50)
+          echo "Fetching new M3U8 link..."
+          # Fetch the best quality HLS/M3U8 URL using yt-dlp
+          NEW_M3U8_URL=$(yt-dlp -g -f "best[ext=mp4]/best" "$YOUTUBE_URL" || yt-dlp -g "$YOUTUBE_URL")
           
-          # Read the current M3U file
-          try:
-              with open('stream.m3u', 'r', encoding='utf-8') as f:
-                  lines = f.readlines()
-          except FileNotFoundError:
-              print("❌ stream.m3u not found!")
-              sys.exit(1)
+          if [ -z "$NEW_M3U8_URL" ]; then
+            echo "Error: Could not retrieve M3U8 URL from YouTube."
+            exit 1
+          fi
           
-          # Find all unique YouTube video IDs
-          video_ids = {}
-          current_channel = None
-          current_logo = None
-          current_group = None
-          
-          for i, line in enumerate(lines):
-              # Capture channel info from EXTINF line
-              if '#EXTINF:' in line:
-                  # Extract logo
-                  logo_match = re.search(r'tvg-logo="([^"]+)"', line)
-                  current_logo = logo_match.group(1) if logo_match else ""
-                  
-                  # Extract group
-                  group_match = re.search(r'group-title="([^"]+)"', line)
-                  current_group = group_match.group(1) if group_match else ""
-                  
-                  # Extract channel name (after last comma)
-                  name_match = re.search(r',([^,\n]+)$', line)
-                  current_channel = name_match.group(1).strip() if name_match else None
-              
-              # Find YouTube URLs with video IDs
-              if 'googlevideo.com' in line and 'id/' in line:
-                  id_match = re.search(r'id/([a-zA-Z0-9_-]+)\.', line)
-                  if id_match and current_channel:
-                      video_id = id_match.group(1)
-                      if video_id not in video_ids:
-                          video_ids[video_id] = {
-                              'line_numbers': [],
-                              'channel': current_channel,
-                              'logo': current_logo,
-                              'group': current_group
-                          }
-                      video_ids[video_id]['line_numbers'].append(i)
-                      print(f"📺 Found: {current_channel} (ID: {video_id})")
-          
-          if not video_ids:
-              print("⚠️ No YouTube streams found in M3U file!")
-              sys.exit(0)
-          
-          print(f"\n📊 Found {len(video_ids)} unique YouTube streams")
-          print("=" * 50)
-          
-          # Refresh each unique video ID
-          refreshed_count = 0
-          failed_count = 0
-          
-          for video_id, info in video_ids.items():
-              print(f"\n🔄 Refreshing: {info['channel']}")
-              print(f"   Video ID: {video_id}")
-              
-              try:
-                  # Get fresh streaming URL
-                  cmd = [
-                      'yt-dlp', 
-                      '-g', 
-                      '-f', 'best', 
-                      f'https://www.youtube.com/watch?v={video_id}',
-                      '--no-warnings'
-                  ]
-                  
-                  result = subprocess.run(
-                      cmd,
-                      capture_output=True,
-                      text=True,
-                      timeout=60
-                  )
-                  
-                  if result.returncode == 0 and result.stdout.strip():
-                      # Get the first URL (best quality)
-                      new_url = result.stdout.strip().split('\n')[0]
-                      
-                      # Verify it's a valid YouTube URL
-                      if 'googlevideo.com' in new_url or 'youtube' in new_url:
-                          # Replace ALL occurrences of this video ID's URLs
-                          for line_num in info['line_numbers']:
-                              # Reconstruct EXTINF line
-                              extinf_line = f'#EXTINF:-1 tvg-logo="{info["logo"]}" group-title="{info["group"]}",{info["channel"]}\n'
-                              lines[line_num - 1] = extinf_line
-                              # Replace URL line
-                              lines[line_num] = new_url + '\n'
-                          
-                          print(f"   ✅ Success! Got fresh URL")
-                          refreshed_count += 1
-                      else:
-                          print(f"   ⚠️ Got non-YouTube URL, skipping")
-                          failed_count += 1
-                  else:
-                      print(f"   ❌ Failed: {result.stderr[:100]}")
-                      failed_count += 1
-                      
-              except subprocess.TimeoutExpired:
-                  print(f"   ❌ Timeout after 60 seconds")
-                  failed_count += 1
-              except Exception as e:
-                  print(f"   ❌ Error: {str(e)[:100]}")
-                  failed_count += 1
-              
-              # Small delay to avoid rate limiting
-              import time
-              time.sleep(2)
-          
-          # Save the refreshed M3U file
-          with open('stream.m3u', 'w', encoding='utf-8') as f:
-              f.writelines(lines)
-          
-          print("\n" + "=" * 50)
-          print(f"📊 Refresh Summary:")
-          print(f"   ✅ Successful: {refreshed_count}")
-          print(f"   ❌ Failed: {failed_count}")
-          print(f"   📁 File saved: stream.m3u")
-          print(f"🕐 Completed at: {datetime.now()}")
-          
-          # Exit with error if all failed
-          if refreshed_count == 0 and failed_count > 0:
-              print("\n⚠️ All streams failed to refresh!")
-              sys.exit(1)
-          
-          PYTHON_SCRIPT
-      
+          echo "Successfully retrieved new link."
+
+          # Update the line directly below the ARY marker in playlist.m3u
+          # This replaces the old URL with the newly generated tokenized link
+          sed -i '/ARY/{n;s|.*|'"$NEW_M3U8_URL"'|}' playlist.m3u
+
       - name: Commit and Push Changes
         run: |
-          # Check if there are changes
-          if git diff --quiet stream.m3u; then
-            echo "✅ No changes detected - URLs are still valid"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          git add playlist.m3u
+          
+          # Only commit if the file actually changed to avoid redundant commits
+          if git diff-index --quiet HEAD --; then
+            echo "No changes detected. Link is still identical."
           else
-            echo "📝 Changes detected, committing..."
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add stream.m3u
-            git commit -m "🔄 Auto-refresh YouTube streams [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git commit -m "Automated M3U8 link refresh [Skip CI]"
             git push
-            echo "✅ Changes pushed successfully"
           fi
-      
-      - name: Check File Size
-        run: |
-          echo "📊 Final M3U file size:"
-          wc -l stream.m3u
-          echo "File head (first 5 lines):"
-          head -5 stream.m3u
