@@ -1,3 +1,6 @@
 #EXTM3U
-#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk10-z-bha3jXN4SfIx_zdhrd-cakAPpWbZw&s" group-title="PAKISTAN",ARY
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk10-z-bha3jXN4SfIx_zdhrd-cakAPpWbZw&s" group-title="PAKISTAN",ARY (Server 1)
 https://raw.githubusercontent.com/Ramis786/Yt-Live-to-M3u/main/ARY.m3u8
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk10-z-bha3jXN4SfIx_zdhrd-cakAPpWbZw&s" group-title="PAKISTAN",ARY (Server 2)
+https://api.piped.yt/live/l-gmY_uUrKw
