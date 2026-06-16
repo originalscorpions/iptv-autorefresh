@@ -21,6 +21,12 @@ jobs:
         with:
           python-version: '3.x'
 
+      # Fixes the JavaScript runtime warning/error entirely
+      - name: Set up Node.js (For yt-dlp JS Runtime)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install dependencies (yt-dlp)
         run: |
           sudo apt-get update
@@ -34,12 +40,22 @@ jobs:
           # The permanent, hardcoded channel ID endpoint for ARY News
           YOUTUBE_URL="https://www.youtube.com/channel/UCMmpLL2ucRHAXbNHiCPyIyg/live"
           
-          echo "Fetching new M3U8 link..."
-          # Fetch the best quality HLS/M3U8 URL using yt-dlp
-          NEW_M3U8_URL=$(yt-dlp -g -f "best[ext=mp4]/best" "$YOUTUBE_URL" || yt-dlp -g "$YOUTUBE_URL")
+          echo "Fetching new M3U8 link with anti-bot bypass parameters..."
+          
+          # Added Node runtime flag, randomized browser user-agent, and fallback web/android client arguments to bypass bot checks
+          NEW_M3U8_URL=$(yt-dlp \
+            --js-runtimes "node" \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            --extractor-args "youtube:player_client=web,android" \
+            -g -f "best[ext=mp4]/best" "$YOUTUBE_URL" 2>/dev/null || \
+            yt-dlp \
+            --js-runtimes "node" \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            --extractor-args "youtube:player_client=web,android" \
+            -g "$YOUTUBE_URL")
           
           if [ -z "$NEW_M3U8_URL" ]; then
-            echo "Error: Could not retrieve M3U8 URL from YouTube."
+            echo "Error: Could not retrieve M3U8 URL from YouTube. Bot wall is still active."
             exit 1
           fi
           
