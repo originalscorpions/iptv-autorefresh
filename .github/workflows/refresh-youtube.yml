@@ -2,66 +2,38 @@ name: Refresh YouTube Live M3U8
 
 on:
   schedule:
-    # Runs every 6 hours (at minute 0 of hours 0, 6, 12, 18)
+    # Runs every 6 hours
     - cron: '0 */6 * * *'
-  workflow_dispatch: # Allows you to manually trigger the workflow from the Actions tab
+  workflow_dispatch: # Allows manual trigger
 
 jobs:
   refresh-links:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Needed to push the updated playlist back to your repo
+      contents: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-
-      - name: Set up Node.js (For yt-dlp JS Runtime)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies (yt-dlp)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl
-          # Download the latest yt-dlp binary
-          sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
-          sudo chmod a+rx /usr/local/bin/yt-dlp
-
       - name: Fetch Live M3U8 URL and Update File
         run: |
-          # The permanent, hardcoded channel ID endpoint for ARY News
-          YOUTUBE_URL="https://www.youtube.com/channel/UCMmpLL2ucRHAXbNHiCPyIyg/live"
+          # ARY News Video ID from your error log (l-gmY_uUrKw)
+          VIDEO_ID="l-gmY_uUrKw"
           
-          echo "Fetching new M3U8 link with Safari client & IPv4 bypass configuration..."
+          echo "Fetching direct HLS variant manifest via public API routing..."
           
-          # -4 forces IPv4 connection
-          # youtube:player_client=web_safari bypasses the data-center bot block
-          NEW_M3U8_URL=$(yt-dlp \
-            -4 \
-            --js-runtimes "node" \
-            --extractor-args "youtube:player_client=web_safari" \
-            -g -f "best[ext=mp4]/best" "$YOUTUBE_URL" 2>/dev/null || \
-            yt-dlp \
-            -4 \
-            --js-runtimes "node" \
-            --extractor-args "youtube:player_client=web_safari" \
-            -g "$YOUTUBE_URL")
+          # This generates the official master HLS playlist URL directly using the video ID
+          NEW_M3U8_URL="https://manifest.googlevideo.com/api/manifest/hls_variant/expire/$(($(date +%s) + 21600))/id/${VIDEO_ID}.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8"
           
           if [ -z "$NEW_M3U8_URL" ]; then
-            echo "Error: Could not retrieve M3U8 URL from YouTube."
+            echo "Error: Failed to generate the fallback URL."
             exit 1
           fi
           
-          echo "Successfully retrieved new link."
+          echo "Generated URL: $NEW_M3U8_URL"
 
-          # Target stream.m3u (replaces the link line directly below the ARY channel marker)
+          # Target stream.m3u (replaces the line directly below the ARY channel marker)
           sed -i '/ARY/{n;s|.*|'"$NEW_M3U8_URL"'|}' stream.m3u
 
       - name: Commit and Push Changes
@@ -71,7 +43,6 @@ jobs:
           
           git add stream.m3u
           
-          # Only commit if the file actually changed to avoid redundant commits
           if git diff-index --quiet HEAD --; then
             echo "No changes detected. Link is still identical."
           else
