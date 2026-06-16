@@ -1,1 +1,4 @@
-https://c401-node61-cdn.connectmedia.hu/110303/0aa8749ddfd647ab5a273a495c8416f3/6a31d4cc/303-Duna_NOGEO-avc1_400000=10000.m3u8
+#EXTM3U
+
+#EXTINF:-1 group-title="HUNGARY",DUNA TV
+https://placeholder-link-will-be-replaced-by-script.m3u8
