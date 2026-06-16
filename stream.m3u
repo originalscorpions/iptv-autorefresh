@@ -1,16 +1,16 @@
 ﻿#EXTM3U
 #EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk10-z-bha3jXN4SfIx_zdhrd-cakAPpWbZw&s" group-title="HUNGARY",DUNA
-https://c201-node62-cdn.connectmedia.hu/110303/c71100d4a15e6b42ab389270f0c175db/6a2ed61b/index.m3u8?v=5iip:188.28.191.68
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3GBXrV6djb9pggVwTnEjtxGgyxhgv4SA7vg&s" group-title="HUNGARY",M5
-https://c401-node62-cdn.connectmedia.hu/110305/131116e74a6466f318b45419d3a7076f/6a2ede2a/index.m3u8?v=5iip:188.28.191.68
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://static.wikia.nocookie.net/tv-es-radio-logo/images/f/fb/M2_%284%29.png/revision/latest?cb=20250830112036&path-prefix=hu" group-title="HUNGARY",M2
-https://c201-node62-cdn.connectmedia.hu/110302/9fdf50235dcc88d8b0545f2acd2ebb26/6a2ede8d/index.m3u8?v=5iip:188.28.191.68
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://logowik.com/content/uploads/images/m1-avm1651.logowik.com.webp" group-title="HUNGARY",M1 
-https://c202-node62-cdn.connectmedia.hu/110301/a3e793efea7a816b9fb059b04ec92685/6a2f0526/index.m3u8?v=5iip:188.28.191.68
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0023/0264/brand.gif?itok=vbcU37jd" group-title="HUNGARY",HIR TV
-https://videa.hu/static/live/8.2966061.2530409.1.5.590.590/index.m3u8
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/RTL_logo.svg/3840px-RTL_logo.svg.png" group-title="HUNGARY",RTL 
-https://stream.rtl.lu/data/live/tele/channel1/playlist.m3u8
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://1000logos.net/wp-content/uploads/2020/09/Fox-News-Logo.png" group-title="ENGLISH NEWS",FOX NEWS
 https://mjkskdvpfpb1fbv.ngolpdkyoctjcddxshli469r.org/sunshine/XEFm23Pi4bRvuEkLwNLzMtAmz5FyF8hz3OXcal1Sf_202In665lRvDKt8ozmXFW3ea55oGV8oCdfzis5cOM8bF8BR4MDRy79VMD_3OnoikqxB5O2SoT2wpwyK7yVYFxm15HHvhwW1Yk7Go3qe9TSFR0axmO30V-d1ubZUqN45_mDUvzYCKDC4oFHW9w4ga_5TcnyDV3HPJlnQji2QUtCBEetni9nyy7pa6MVijABHvCq_WtH4xX_s8mKxfqpLfeoWE3fhB3nzb5ZJ2hWnYaFJA/hls/index.m3u8
 #EXTINF:-1 tvg-logo="https://customheat.co.uk/wp-content/uploads/2022/05/BBC_News.svg" group-title="ENGLISH NEWS",BBC NEWS
@@ -38,9 +38,9 @@ https://mjkskdvpfpb1fbv.ngolpdkyoctjcddxshli469r.org/sunshine/XEFm23Pi4bRvuEkLwN
 #EXTINF:-1 tvg-logo="https://play-lh.googleusercontent.com/S2OXf-VKm2taIpYSX6plwQ_t3dp8GJKy_7OUsoWIXujgEBhlgTdfTnzcZYQjOcipnCohpZtaYZdmzx-gcNDZ5g" group-title="ENGLISH NEWS",IRAN NEWS
 https://live.playstop.me/1816184091/index.m3u8
 #EXTINF:-1 tvg-logo="https://iconape.com/wp-content/png_logo_vector/national-geographic-channel-logo.png" group-title="DOCUMENTARY",NATIONAL GEOGRAPHIC 
-https://qmaalhy7acgxwhm.ngolpdkyoctjcddxshli469r.org/sunshine/kzBZ4nYvEvPYPVAzen9BmYVHDrIxg3vNi9twUiapaLG7vUU-wmpIXpcJj3PMixw66vpYyoU-StCwLFvT4sgduYTWndY7b46RZoZ0GtVhO3l3Nq70iB2HaqVXhoyvva1LOa_lHti42KKnw8Ohn0qOOCFO9wZkXTYdpe-48BMiMO5r7GV_I1SSHPKBbgzKzlBd6zLiXYwEbS912NCaLBIMF1rg_mZE8105wXXSP8gOAsCWHA7rEJTlZDZABPRvPnGuz2LtR9xh3c50PEulIMeWFA/hls/index.m3u8
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04b0e30e-c394-4e4f-b4bb-b0bb99c50e22/dg86ovo-eefc4e4b-236d-427a-bc8f-d852f90397b0.png/v1/fill/w_733,h_934/animal_planet_logo_combination__2006_2008_2018__by_vincerabina_dg86ovo-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTM0IiwicGF0aCI6Ii9mLzA0YjBlMzBlLWMzOTQtNGU0Zi1iNGJiLWIwYmI5OWM1MGUyMi9kZzg2b3ZvLWVlZmM0ZTRiLTIzNmQtNDI3YS1iYzhmLWQ4NTJmOTAzOTdiMC5wbmciLCJ3aWR0aCI6Ijw9NzMzIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.OVEf-I3631QV_K0RlLcThCQlput1_s4iKVylnW0XoL0" group-title="DOCUMENTARY",ANIMAL PLANET
-https://chat.cfbu247.sbs/api/proxy/playlist?token=eyJyZWZlcmVyIjoiaHR0cHM6Ly9kb25pcy5qaW1wZW5vcGlzb25saW5lLm9ubGluZS9wcmVtaXVtdHYvZGFkZHkucGhwP2lkPTMwNCIsIm0zdTgiOiJodHRwczovL3BvbnRvcy5waGFudGVtbGlzLnRvcC9wcmVtaXVtMzA0L3RyYWNrcy12MWExL21vbm8ubTN1OD9tZDU9aTFFaGZtSUlLZzZnc2VFcjZtT0lMdyZleHBpcmVzPTE3ODE1NTk2OTAiLCJ0cyI6MTc4MTU1NzY1MjI1MiwiY2hhbm5lbElkIjoiMzA0In0
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://photos.prnewswire.com/prnfull/20161208/447017LOGO?max=200" group-title="INDIA NEWS",WION NEWS
 https://d7x8z4yuq42qn.cloudfront.net/index_1.m3u8
 #EXTINF:-1 tvg-logo="https://i.pinimg.com/736x/31/db/34/31db34d472c455b21ac6dba9e31643ba.jpg" group-title="INDIA NEWS",NDTV WORLD
@@ -76,7 +76,7 @@ https://www.youtube.com/watch?v=DLDgwQdp6pM
 #EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_s1QIH4x4Ru0DufX_CNlWhPvPU3o91ZcA9w&s" group-title="PAKISTAN ENTERTAINMENT",MADNI URDU
 https://streaming.madanichannel.tv/static/streaming-playlists/hls/b9790f10-cb0d-4e30-82bf-84a756234e58/master.m3u8
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Arynews.jpg/250px-Arynews.jpg" group-title="PAKISTAN NEWS",ARY NEWS
-https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1781668124/ei/vMQxavXNGuOXvdIP5bPNsQY/ip/2a04:4a43:8ccf:fd76:1df2:c457:8094:a90e/id/l-gmY_uUrKw.1~45786092/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr2---sn-uigxx03-ac5e.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/gcr/gb/bui/ARmQxEX5RZApsdm1EgLmNmtW7TeA0BizpxLutIKMRs4_wwpMG636r-Oe307FZMlIq4c__73JsxFonqRE/spc/SQ-umluWGRGC-DKSWBVE8DLDqAyZs232NjWRA4YMVJ0LRvltlA/vprv/1/reg/0/playlist_type/DVR/initcwndbps/2077500/met/1781646524,/mh/tj/mm/44/mn/sn-uigxx03-ac5e/ms/lva/mv/m/mvi/2/pl/40/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51565116,51565682,51987687/mt/1781646037/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,gcr,bui,spc,vprv,reg,playlist_type/sig/AHEqNM4wRQIgInxSnQg5HNtGJ5rHCDVc_l7-W52QBj29BwyfxjnXC1cCIQDXU5qC3usUYCjbXqfwXhOq6B-Gvntz5aeQgaBGMyhtvQ%3D%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhAI28HgDAFKsH1Df3s-kBn_a7SymVeftnv3b2N6GXjvKrAiEA59TUjAhr_a9tDqw-1-brQBjR6mTH-HMpIOA4FzDRL0M%3D/playlist/index.m3u8
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.pinimg.com/736x/47/5f/62/475f62d5943271735aa41e30de7a6f0c.jpg" group-title="PAKISTAN NEWS",GEO NEWS
 https://jk3lz82elw79-hls-live.5centscdn.com/GEONEWS/75810ad1df1beb09072aaac7df49b110.sdp/playlist.m3u8
 #EXTINF:-1 tvg-logo="https://mir-s3-cdn-cf.behance.net/project_modules/disp/07679378537075.5ca77194a74ac.jpg" group-title="PAKISTAN NEWS",HUM NEWS
@@ -138,7 +138,7 @@ https://d2lk5u59tns74c.cloudfront.net/out/v1/558fdb9aebb54bb5bbbf0ced03686148/in
 #EXTINF:-1 tvg-logo="https://static.wikia.nocookie.net/logopedia/images/8/81/Dd_goa.png/revision/latest?cb=20200303073332" group-title="INDIA DD",DD GOA
 https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/e5b9db1cc184406bb97159da2f120f91/index.m3u8
 #EXTINF:-1 tvg-logo="https://yt3.googleusercontent.com/IiF2xOH-q2Ba1kV3km9v015tVjaFSHy9RXrEtyhyRAYzjMIb1uKXhNKQpR-Mq853rnQqSOP-0w=s900-c-k-c0x00ffffff-no-rj" group-title="INDIA DD",DD HARYANA
-https://d2lk5u59tns74c.cloudfront.net/out/v1/950fc69666474351bde0a32b9600c804/index.m3u8
+https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1781670923/id/l-gmY_uUrKw.1/source/yt_live_broadcast/itag/0/playlist_type/LIVE/sparams/expire,id,source,itag,playlist_type/go/1/keepalive/yes/gcr/pk/playlist/index.m3u8
 #EXTINF:-1 tvg-logo="https://tma-live.s3.ap-south-1.amazonaws.com/medias/59fc1745434b5a467eaf16fe/1565808923864/366bc94c10299bfe8d75c35e594c3c5d.jpg" group-title="INDIA DD",DD HIMACHALPRADESH
 https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/afd2e335b0ba40eb9bdf1096118c6ede/index.m3u8
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/thumb/1/13/Doordarshan_Jharkhand.jpg/250px-Doordarshan_Jharkhand.jpg" group-title="INDIA DD",DD JHARKHAND
